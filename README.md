@@ -3,8 +3,8 @@
 Plataforma web do serviço de churrasco premium a domicílio **SAL & TAL — O Churrasco**.
 Aplicação completa e funcional (frente + servidor + banco de dados), não um protótipo.
 
-> **Status atual: Fase 1 concluída** (Fundação e Captação). As próximas fases
-> estão descritas no fim deste documento.
+> **Status atual: Fases 1 e 2 concluídas.** As próximas fases estão descritas
+> no fim deste documento.
 
 ---
 
@@ -20,6 +20,20 @@ Aplicação completa e funcional (frente + servidor + banco de dados), não um p
   solicitações e mostra os detalhes de cada uma, com botão direto para o WhatsApp.
 - **Deduplicação de cliente**: se o mesmo WhatsApp pedir orçamento de novo, o
   sistema reaproveita o cadastro em vez de duplicar.
+
+### Fase 2 — Propostas e contratação
+
+- **Editor de proposta** no admin, criado a partir da solicitação, com escopo,
+  valor, condições, validade e ressalvas (o que o cliente vê).
+- **Precificação interna confidencial**: tabela editável de insumos
+  (quantidade × custo = subtotal), despesas e um resumo de conferência
+  (custo total, receita, resultado bruto). **Sem fórmula automática de preço.**
+- **Proposta por link seguro individual**: o cliente abre por um token
+  aleatório, vê só o que pode ver (nunca custos) e **aceita ou recusa**.
+- **Sinal de garantia (50%)** avisado de forma discreta na proposta; ao aceitar,
+  o sistema **cria o evento** e registra o valor do sinal como pendente.
+- **PDF** da proposta e **histórico de versões** (duplicar em nova versão).
+- Botão de **enviar por WhatsApp** (monta a mensagem com o link).
 
 ---
 

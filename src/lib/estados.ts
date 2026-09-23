@@ -39,6 +39,31 @@ export const STATUS_SINAL = {
 } as const;
 
 export type StatusSolicitacao = keyof typeof STATUS_SOLICITACAO;
+export type StatusProposta = keyof typeof STATUS_PROPOSTA;
+
+/** Rótulo legível para um status de proposta. */
+export function rotuloStatusProposta(status: string): string {
+  return STATUS_PROPOSTA[status as StatusProposta] ?? status;
+}
+
+/** Classe de cor (Tailwind) para o selo de status de proposta. */
+export function corStatusProposta(status: string): string {
+  switch (status) {
+    case "RASCUNHO":
+      return "bg-white/5 text-white/60 border border-white/10";
+    case "ENVIADA":
+    case "VISUALIZADA":
+      return "bg-amber-500/15 text-amber-300 border border-amber-500/30";
+    case "ACEITA":
+      return "bg-emerald-500/15 text-emerald-300 border border-emerald-500/30";
+    case "RECUSADA":
+    case "EXPIRADA":
+    case "CANCELADA":
+      return "bg-white/5 text-white/50 border border-white/10";
+    default:
+      return "bg-white/5 text-white/60 border border-white/10";
+  }
+}
 
 /** Rótulo legível para um status de solicitação. */
 export function rotuloStatusSolicitacao(status: string): string {

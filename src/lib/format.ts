@@ -55,3 +55,20 @@ export function dataParaInputISO(data: Date): string {
   const dia = String(data.getDate()).padStart(2, "0");
   return `${ano}-${mes}-${dia}`;
 }
+
+/**
+ * Interpreta um número digitado no padrão brasileiro ou simples.
+ * Aceita "1.250,00", "1250,5", "1250.5" e "1250". Retorna null se vazio/inválido.
+ */
+export function parseNumeroBR(texto: string | null | undefined): number | null {
+  if (texto === null || texto === undefined) return null;
+  const limpo = String(texto).trim();
+  if (!limpo) return null;
+  let normalizado = limpo;
+  if (limpo.includes(",")) {
+    // vírgula é o separador decimal: remove pontos de milhar
+    normalizado = limpo.replace(/\./g, "").replace(",", ".");
+  }
+  const n = Number(normalizado);
+  return Number.isFinite(n) ? n : null;
+}
