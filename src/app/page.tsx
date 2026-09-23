@@ -1,11 +1,23 @@
 import Link from "next/link";
 import MarcaHeader from "@/components/MarcaHeader";
 
-/** Ícone dentro de um círculo vinho (usado nas seções claras). */
-function IconeCirculo({ children }: { children: React.ReactNode }) {
+/** Selo com um check, dentro de um círculo vinho (usado nas seções claras). */
+function SeloCheck() {
   return (
     <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-full bg-vinho text-creme">
-      {children}
+      <svg
+        width="20"
+        height="20"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2.4"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        aria-hidden="true"
+      >
+        <path d="M5 12.5l4.5 4.5L19 7" />
+      </svg>
     </div>
   );
 }
@@ -61,55 +73,52 @@ export default function PaginaInicial() {
       {/* ---------------- O QUE OFERECEMOS (creme) ---------------- */}
       <section className="bg-creme text-tinta">
         <div className="mx-auto max-w-6xl px-4 py-16 sm:py-20">
-          <h2 className="mb-10 font-display text-3xl font-semibold sm:text-4xl">
-            O que oferecemos
-          </h2>
-          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {[
-              {
-                icone: (
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M3 3l7 7" />
-                    <path d="M14 4c2.5 0 5 2 5 5 0 3-3 5-3 5l-8-8s3-2 6-2z" />
-                    <path d="M11 13l-7 7" />
-                  </svg>
-                ),
-                titulo: "Curadoria de cortes nobres",
-                texto:
-                  "Seleção dos melhores cortes e produtos, preparados com a técnica e o cuidado que você merece.",
-              },
-              {
-                icone: (
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M20.8 8.6a3.4 3.4 0 0 0-5-.3l-.8.8-.8-.8a3.4 3.4 0 1 0-4.8 4.8l5.6 5.6 5.6-5.6a3.4 3.4 0 0 0 0-4.5z" />
-                    <path d="M3 12h3l1.5-3 2 5 1.5-2" />
-                  </svg>
-                ),
-                titulo: "Atendimento completo e personalizado",
-                texto:
-                  "Você recebe os convidados. Nós fazemos o restante, garantindo cada detalhe do seu evento.",
-              },
-              {
-                icone: (
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-                    <rect x="6" y="4" width="12" height="16" rx="2" />
-                    <path d="M9 4V3h6v1" />
-                    <path d="M9 12l2 2 4-4" />
-                  </svg>
-                ),
-                titulo: "Praticidade total",
-                texto:
-                  "Do planejamento à execução — tudo pensado para você aproveitar, sem complicação.",
-              },
-            ].map((c) => (
-              <div key={c.titulo} className="cartao-creme p-6">
-                <IconeCirculo>{c.icone}</IconeCirculo>
-                <h3 className="mb-2 font-display text-xl font-semibold leading-snug">
-                  {c.titulo}
-                </h3>
-                <p className="text-sm leading-relaxed text-tinta-suave">{c.texto}</p>
+          <div className="grid items-center gap-10 lg:grid-cols-2">
+            {/* Foto */}
+            <div className="overflow-hidden rounded-2xl shadow-cartao">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/fotos/picanha.jpg"
+                alt="Corte nobre selecionado sobre tábua de madeira"
+                className="h-full w-full object-cover"
+              />
+            </div>
+
+            {/* Texto + cards */}
+            <div>
+              <h2 className="mb-8 font-display text-3xl font-semibold sm:text-4xl">
+                O que oferecemos
+              </h2>
+              <div className="space-y-4">
+                {[
+                  {
+                    titulo: "Curadoria de cortes nobres",
+                    texto:
+                      "Seleção dos melhores cortes e produtos, preparados com a técnica e o cuidado que você merece.",
+                  },
+                  {
+                    titulo: "Atendimento completo e personalizado",
+                    texto:
+                      "Você recebe os convidados. Nós fazemos o restante, garantindo cada detalhe do seu evento.",
+                  },
+                  {
+                    titulo: "Praticidade total",
+                    texto:
+                      "Do planejamento à execução — tudo pensado para você aproveitar, sem complicação.",
+                  },
+                ].map((c) => (
+                  <div key={c.titulo} className="cartao-creme p-6">
+                    <SeloCheck />
+                    <h3 className="mb-2 font-display text-xl font-semibold leading-snug">
+                      {c.titulo}
+                    </h3>
+                    <p className="text-sm leading-relaxed text-tinta-suave">
+                      {c.texto}
+                    </p>
+                  </div>
+                ))}
               </div>
-            ))}
+            </div>
           </div>
         </div>
       </section>
@@ -179,6 +188,16 @@ export default function PaginaInicial() {
             melhores opções para o seu evento.
           </p>
         </div>
+      </section>
+
+      {/* ---------------- FAIXA (foto do churrasco) ---------------- */}
+      <section className="relative">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/fotos/churrasco-corte.jpg"
+          alt="Preparo do churrasco na brasa, servido no local"
+          className="h-56 w-full object-cover sm:h-72"
+        />
       </section>
 
       {/* ---------------- CTA FINAL (escuro) ---------------- */}
