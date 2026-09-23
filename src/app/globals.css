@@ -1,0 +1,68 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply bg-carvao text-creme antialiased;
+  background-image:
+    radial-gradient(1200px 600px at 50% -10%, rgba(232, 84, 30, 0.16), transparent 60%),
+    radial-gradient(900px 500px at 100% 100%, rgba(178, 31, 22, 0.10), transparent 55%);
+  background-attachment: fixed;
+  min-height: 100vh;
+}
+
+/* Título com brilho de brasa */
+.titulo-brasa {
+  background: linear-gradient(180deg, #ffffff 0%, #ffd9a8 60%, #ff8a3d 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Cartões escuros da marca */
+.cartao {
+  @apply rounded-2xl border border-carvao-borda bg-carvao-claro/80 backdrop-blur;
+}
+
+/* Botão principal (brasa) */
+.btn-brasa {
+  @apply inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-b from-brasa-claro to-brasa-escuro px-6 py-3 font-semibold text-white shadow-brasa transition hover:brightness-110 active:brightness-95 disabled:cursor-not-allowed disabled:opacity-60;
+}
+
+/* Botão secundário */
+.btn-ghost {
+  @apply inline-flex items-center justify-center gap-2 rounded-xl border border-carvao-borda bg-carvao-medio/60 px-5 py-3 font-medium text-creme transition hover:bg-carvao-medio;
+}
+
+/* Campos de formulário */
+.campo {
+  @apply w-full rounded-xl border border-carvao-borda bg-carvao/60 px-4 py-3 text-creme placeholder-white/30 outline-none transition focus:border-brasa focus:ring-2 focus:ring-brasa/30;
+}
+
+.rotulo {
+  @apply mb-2 block text-sm font-medium text-creme/90;
+}
+
+.dica {
+  @apply mt-1 text-xs text-white/40;
+}
+
+.erro {
+  @apply mt-1 text-sm text-red-400;
+}
+
+/* Opção selecionável (radio estilizado) */
+.opcao {
+  @apply flex cursor-pointer items-center gap-3 rounded-xl border border-carvao-borda bg-carvao/50 px-4 py-3 transition hover:border-brasa/50;
+}
+.opcao-ativa {
+  @apply border-brasa bg-brasa/10 ring-1 ring-brasa/40;
+}

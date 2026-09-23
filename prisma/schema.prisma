@@ -1,0 +1,200 @@
+// =============================================================================
+// SAL & TAL — O CHURRASCO
+// Modelo de dados (espinha dorsal do sistema)
+//
+// Banco: SQLite (arquivo local, zero manutenção).
+// Para produção, trocar o provider para "postgresql" e ajustar DATABASE_URL —
+// o resto do código continua igual.
+// =============================================================================
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// -----------------------------------------------------------------------------
+// CLIENTE
+// Um cliente pode ter várias solicitações ao longo do tempo.
+// -----------------------------------------------------------------------------
+model Cliente {
+  id                String        @id @default(cuid())
+  nome              String
+  whatsapp          String
+  observacoesInternas String?     // nunca exibido ao cliente
+  criadoEm          DateTime      @default(now())
+  atualizadoEm      DateTime      @updatedAt
+
+  solicitacoes      Solicitacao[]
+  eventos           Evento[]
+}
+
+// -----------------------------------------------------------------------------
+// SOLICITAÇÃO (Formulário 1 — pedido de orçamento)
+// Pertence a um cliente. Pode dar origem a uma ou mais propostas (versões).
+// -----------------------------------------------------------------------------
+model Solicitacao {
+  id                 String     @id @default(cuid())
+  numero             Int        @unique // referência amigável interna (sequencial, atribuída no código)
+
+  cliente            Cliente    @relation(fields: [clienteId], references: [id])
+  clienteId          String
+
+  // Data e ocasião
+  dataEvento         DateTime
+  ocasiao            String     // Aniversário | Confraternização de empresa | ... | Outro
+  ocasiaoOutro       String?    // preenchido quando ocasiao = "Outro"
+
+  // Convidados
+  numAdultos         Int
+  temCriancas        Boolean    @default(false)
+  numCriancas        Int?
+
+  // Restrições alimentares
+  temRestricoes      Boolean    @default(false)
+  restricoesDetalhe  String?
+
+  // Infraestrutura
+  temChurrasqueira   Boolean
+
+  // Localização
+  endereco           String
+
+  // Ciclo de vida — ver valores em src/lib/estados.ts (SQLite não suporta enum)
+  status             String     @default("NOVO")
+  criadoEm           DateTime   @default(now())
+  atualizadoEm       DateTime   @updatedAt
+
+  propostas          Proposta[]
+}
+
+// -----------------------------------------------------------------------------
+// PROPOSTA (Fase 2)
+// Criada internamente a partir de uma solicitação. Guarda histórico de versões.
+// O BLOCO DE CUSTOS É CONFIDENCIAL e nunca é exposto ao cliente.
+// -----------------------------------------------------------------------------
+model Proposta {
+  id                 String     @id @default(cuid())
+  solicitacao        Solicitacao @relation(fields: [solicitacaoId], references: [id])
+  solicitacaoId      String
+  versao             Int        @default(1)
+
+  // Visível ao cliente
+  escopoDescricao    String?
+  valorTotal         Float?     // em reais
+  condicoesPagamento String?
+  validadeAte        DateTime?
+  ressalvas          String?
+
+  // Confidencial (somente admin)
+  observacoesInternas String?
+  custoItens         CustoItem[]
+  despesasVariaveis  Float?     @default(0)
+  despesasFixas      Float?     @default(0)
+  margem             Float?     // percentual ou valor — definido pela regra futura
+  resultadoBruto     Float?
+
+  status             String     @default("RASCUNHO")
+  tokenAcesso        String     @unique @default(cuid()) // link individual seguro do cliente
+  enviadaEm          DateTime?
+  visualizadaEm      DateTime?
+  aceitaEm           DateTime?
+  recusadaEm         DateTime?
+
+  criadoEm           DateTime   @default(now())
+  atualizadoEm       DateTime   @updatedAt
+
+  evento             Evento?
+}
+
+// Item da ferramenta de precificação (estrutura editável; sem fórmula automática)
+model CustoItem {
+  id            String   @id @default(cuid())
+  proposta      Proposta @relation(fields: [propostaId], references: [id], onDelete: Cascade)
+  propostaId    String
+  insumo        String
+  quantidade    Float
+  unidade       String   @default("kg") // kg | unidade
+  custoUnitario Float
+  subtotal      Float
+  criadoEm      DateTime @default(now())
+}
+
+// -----------------------------------------------------------------------------
+// EVENTO (Fase 3)
+// Nasce quando uma proposta é aceita. Vincula cliente, proposta e os dois
+// formulários. Carrega o FINANCEIRO do sinal de garantia (50%).
+// -----------------------------------------------------------------------------
+model Evento {
+  id                 String     @id @default(cuid())
+
+  cliente            Cliente    @relation(fields: [clienteId], references: [id])
+  clienteId          String
+
+  proposta           Proposta   @relation(fields: [propostaId], references: [id])
+  propostaId         String     @unique
+
+  dataHora           DateTime?
+  local              String?
+  numConvidados      Int?
+
+  // Dados do Formulário 2 (preparação) — guardados como JSON serializado
+  formulario2        String?    // JSON com as respostas do Formulário 2
+  formulario2Em      DateTime?
+
+  checklist          String?    // JSON do checklist de preparação
+  observacoesInternas String?
+
+  // FINANCEIRO — sinal de garantia (50% da proposta)
+  valorSinal         Float?
+  dataSinalPrevista  DateTime?
+  dataSinalRecebido  DateTime?
+  statusSinal        String     @default("PENDENTE")
+
+  status             String     @default("AGUARDANDO_FORM2")
+  criadoEm           DateTime   @default(now())
+  atualizadoEm       DateTime   @updatedAt
+}
+
+// -----------------------------------------------------------------------------
+// USUÁRIO ADMIN (acesso à área administrativa)
+// -----------------------------------------------------------------------------
+model UsuarioAdmin {
+  id        String   @id @default(cuid())
+  login     String   @unique
+  nome      String
+  senhaHash String   // bcrypt
+  ativo     Boolean  @default(true)
+  criadoEm  DateTime @default(now())
+}
+
+// -----------------------------------------------------------------------------
+// CONFIGURAÇÃO (parâmetros editáveis: máximos, etc.)
+// -----------------------------------------------------------------------------
+model Configuracao {
+  id          String  @id @default("default")
+  maxAdultos  Int     @default(30)
+  maxCriancas Int     @default(30)
+  atualizadoEm DateTime @updatedAt @default(now())
+}
+
+// -----------------------------------------------------------------------------
+// DATAS DISPONÍVEIS (o cliente só escolhe datas pré-determinadas)
+// A agenda é CONSULTIVA — a data escolhida não confirma nada automaticamente.
+// -----------------------------------------------------------------------------
+model DataDisponivel {
+  id        String   @id @default(cuid())
+  data      DateTime @unique
+  ativa     Boolean  @default(true)
+  criadoEm  DateTime @default(now())
+}
+
+// =============================================================================
+// ESTADOS (ciclo de vida da jornada)
+// Os valores válidos de cada campo "status" são controlados no código, em
+// src/lib/estados.ts. SQLite não suporta enum nativo; ao migrar para Postgres
+// esses campos podem virar enums reais sem alterar a lógica da aplicação.
+// =============================================================================
