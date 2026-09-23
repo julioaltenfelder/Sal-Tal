@@ -12,39 +12,52 @@ html {
 
 body {
   @apply bg-carvao text-creme antialiased;
+  /* Vinheta discreta e quente (bordô), sem alaranjado */
   background-image:
-    radial-gradient(1200px 600px at 50% -10%, rgba(232, 84, 30, 0.16), transparent 60%),
-    radial-gradient(900px 500px at 100% 100%, rgba(178, 31, 22, 0.10), transparent 55%);
+    radial-gradient(1100px 520px at 50% -15%, rgba(125, 31, 29, 0.14), transparent 62%),
+    radial-gradient(800px 460px at 100% 110%, rgba(61, 15, 14, 0.18), transparent 60%);
   background-attachment: fixed;
   min-height: 100vh;
 }
 
-/* Título com brilho de brasa */
-.titulo-brasa {
-  background: linear-gradient(180deg, #ffffff 0%, #ffd9a8 60%, #ff8a3d 100%);
+/* Título de destaque sobre fundo escuro (creme sutil, sem laranja) */
+.titulo-brasa,
+.titulo-marca {
+  background: linear-gradient(180deg, #ffffff 0%, #f4e9d6 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
 }
 
-/* Cartões escuros da marca */
+/* Cartões escuros (áreas escuras e admin) */
 .cartao {
   @apply rounded-2xl border border-carvao-borda bg-carvao-claro/80 backdrop-blur;
 }
 
-/* Botão principal (brasa) */
-.btn-brasa {
-  @apply inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-b from-brasa-claro to-brasa-escuro px-6 py-3 font-semibold text-white shadow-brasa transition hover:brightness-110 active:brightness-95 disabled:cursor-not-allowed disabled:opacity-60;
+/* Cartão claro (seções creme) */
+.cartao-creme {
+  @apply rounded-2xl border border-creme-borda bg-creme-card;
 }
 
-/* Botão secundário */
+/* Botão principal (vinho / bordô) */
+.btn-brasa,
+.btn-vinho {
+  @apply inline-flex items-center justify-center gap-2 rounded-xl bg-vinho px-6 py-3 font-semibold text-creme shadow-vinho transition hover:bg-vinho-claro active:brightness-95 disabled:cursor-not-allowed disabled:opacity-60;
+}
+
+/* Botão secundário sobre fundo escuro (contorno claro) */
 .btn-ghost {
-  @apply inline-flex items-center justify-center gap-2 rounded-xl border border-carvao-borda bg-carvao-medio/60 px-5 py-3 font-medium text-creme transition hover:bg-carvao-medio;
+  @apply inline-flex items-center justify-center gap-2 rounded-xl border border-creme/25 bg-transparent px-5 py-3 font-medium text-creme transition hover:bg-creme/10;
+}
+
+/* Botão secundário sobre fundo claro (contorno escuro) */
+.btn-outline-escuro {
+  @apply inline-flex items-center justify-center gap-2 rounded-xl border border-tinta/25 bg-transparent px-5 py-3 font-medium text-tinta transition hover:bg-tinta/5;
 }
 
 /* Campos de formulário */
 .campo {
-  @apply w-full rounded-xl border border-carvao-borda bg-carvao/60 px-4 py-3 text-creme placeholder-white/30 outline-none transition focus:border-brasa focus:ring-2 focus:ring-brasa/30;
+  @apply w-full rounded-xl border border-carvao-borda bg-carvao/60 px-4 py-3 text-creme placeholder-white/30 outline-none transition focus:border-vinho-claro focus:ring-2 focus:ring-vinho/30;
 }
 
 .rotulo {
@@ -61,8 +74,8 @@ body {
 
 /* Opção selecionável (radio estilizado) */
 .opcao {
-  @apply flex cursor-pointer items-center gap-3 rounded-xl border border-carvao-borda bg-carvao/50 px-4 py-3 transition hover:border-brasa/50;
+  @apply flex cursor-pointer items-center gap-3 rounded-xl border border-carvao-borda bg-carvao/50 px-4 py-3 transition hover:border-vinho/60;
 }
 .opcao-ativa {
-  @apply border-brasa bg-brasa/10 ring-1 ring-brasa/40;
+  @apply border-vinho bg-vinho/15 ring-1 ring-vinho/40;
 }

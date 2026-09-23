@@ -184,7 +184,7 @@ export default function FormularioOrcamento({
         </div>
         <div className="h-1.5 w-full overflow-hidden rounded-full bg-carvao-medio">
           <div
-            className="h-full rounded-full bg-gradient-to-r from-brasa-amarelo to-brasa transition-all"
+            className="h-full rounded-full bg-gradient-to-r from-vinho-claro to-vinho transition-all"
             style={{ width: `${(passo / TOTAL_PASSOS) * 100}%` }}
           />
         </div>
